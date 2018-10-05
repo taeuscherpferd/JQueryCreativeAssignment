@@ -28,15 +28,15 @@ $(document).ready(function () {
         console.log(descriptionuri);
         var sprite = data.sprites.front_default;
 
-        var image = "<img src=\"" + sprite + "\" alt=\"Pokemon Image\">";
-        image += "<br><h3>" + "#" + pokeid + ": " + pokename.charAt(0).toUpperCase() + pokename.slice(1) + "</h3>";
-        image += "<p> Type: " + poketype1;
-        if(data.types.length == 2) {
-            image += "/" + poketype2;
+        var resultsToHTML = "<img src=\"" + sprite + "\" alt=\"Pokemon Image\">";
+        resultsToHTML += "<br><h3>" + "#" + pokeid + ": " + pokename.charAt(0).toUpperCase() + pokename.slice(1) + "</h3>";
+        resultsToHTML += "<p> Type: " + poketype1;
+        if (data.types.length == 2) {
+          resultsToHTML += "/" + poketype2;
         }
-        image += "</p>";
+        resultsToHTML += "</p>";
         console.log("displayed the Pokemon");
-        
+
         var pokedescription = "";
         $.ajax({
           type: "GET",
@@ -44,16 +44,19 @@ $(document).ready(function () {
           datatype: "jsonp",
           success: function (data2) {
             console.log(data2);
-            pokedescription = data2.flavor_text_entries[1].flavor_text;
+            if (data2.flavor_text_entries[1].language.name != "en") {
+              pokedescription = data2.flavor_text_entries[2].flavor_text;
+            }
+            else {
+              pokedescription = data2.flavor_text_entries[1].flavor_text;
+            }
             console.log(pokedescription);
-            image += "<p>" + pokedescription + "</p>";
-        
-            $(pokemon).html(image);
+            resultsToHTML += "<p>" + pokedescription + "</p>";
+
+            $(pokemon).html(resultsToHTML);
           }
         });
-        
-    
       }
-    });	
+    });
   })
 });
